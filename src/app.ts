@@ -4,7 +4,7 @@ import morgan from "morgan";
 import cors from "cors";
 import { userRouter } from  "./routes/userRoutes";
 import { errorHandler } from "./middlewares/errorHandler";
-
+import {universityRouter} from "./routes/universityRouter";
 const app: Application = express();
 
 // Middleware
@@ -15,6 +15,7 @@ app.use(morgan("dev"));
 
 // Routes
 app.use("/api/users", userRouter);
+app.use("/api/courses", universityRouter);
 
 // Health check
 app.get("/", (req, res) => {
