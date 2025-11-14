@@ -5,6 +5,10 @@ import cors from "cors";
 import { userRouter } from  "./routes/userRoutes";
 import { errorHandler } from "./middlewares/errorHandler";
 import {universityRouter} from "./routes/universityRouter";
+import {seedDataRouter} from "./routes/seedDataRouter";
+
+
+
 const app: Application = express();
 
 // Middleware
@@ -16,6 +20,7 @@ app.use(morgan("dev"));
 // Routes
 app.use("/api/users", userRouter);
 app.use("/api/courses", universityRouter);
+app.use("/api/seed", seedDataRouter);
 
 // Health check
 app.get("/", (req, res) => {

@@ -51,4 +51,5 @@ const universitySchema = new Schema<IUniversitySchema>({
   programsOffered: { type: [Object], required: true },
 })
 
-export const University = mongoose.model<IUniversitySchema>("University", universitySchema);
+const universityDb = mongoose.connection.useDb("universityDB");
+export const University = universityDb.model("University", universitySchema);

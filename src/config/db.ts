@@ -10,7 +10,7 @@ export const connectDB = async (): Promise<void> => {
         "MongoDB connection string (MONGO_URI) not found in .env"
       );
     }
-
+    // no DB name → defaults to "test"
     console.log("Connecting to MongoDB...", config.mongoUri);
     const client = new MongoClient(config.mongoUri, {
       serverApi: {
