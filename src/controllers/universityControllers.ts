@@ -1,10 +1,13 @@
 import { Request, Response } from "express";
+import { University } from "../models/University";
 
-export const getAllUniversities = (req: Request, res: Response) => {
+export const getAllUniversities = async (req: Request, res: Response) => {
+    const data = await University.find();
   res.status(200).json({
+    statusCode: 200,
     success: true,
     message: "Fetched universities successfully!",
-    data: [{ id: 1, name: "Harvard University" }],
+    data,
   });
 };
 

@@ -19,7 +19,7 @@ app.use(morgan("dev"));
 
 // Routes
 app.use("/api/users", userRouter);
-app.use("/api/courses", universityRouter);
+app.use("/api/unis", universityRouter);
 app.use("/api/seed", seedDataRouter);
 
 // Health check
