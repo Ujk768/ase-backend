@@ -29,6 +29,7 @@ type Programs = {
   courses: coursesOffered[];
   admissionRequirements: AdmissionRequirements[];
   redditReviews: string[];
+  userRating: number;
 };
 
 export interface IUniversitySchema extends Document {
