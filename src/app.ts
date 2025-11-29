@@ -6,6 +6,7 @@ import { userRouter } from  "./routes/userRoutes";
 import { errorHandler } from "./middlewares/errorHandler";
 import {universityRouter} from "./routes/universityRouter";
 import {seedDataRouter} from "./routes/seedDataRouter";
+import { recommendationsRouter } from "./routes/recommendationsRouter";
 
 
 
@@ -21,6 +22,7 @@ app.use(morgan("dev"));
 app.use("/api/users", userRouter);
 app.use("/api/unis", universityRouter);
 app.use("/api/seed", seedDataRouter);
+app.use("/api/recommendations", recommendationsRouter); 
 
 // Health check
 app.get("/", (req, res) => {
