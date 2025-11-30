@@ -1,16 +1,75 @@
 import { Request, Response } from "express";
-import { University } from "../models/University";
+import { IUniversitySchema, University } from "../models/University";
+import { findDataBySearchQuery } from "./universityControllers";
 
 export const getRecommendations = async (req: Request, res: Response) => {
   try {
-    const { sortBy } = req.body; // "budget" | "prestige" | "rating"
+    const { sortBy, query } = req.body; // "budget" | "prestige" | "rating"
 
     // Get all universities with programs
-    const universities = await University.find();
+    // const universities = await University.find();
+    const searchQuery = new RegExp(query, "i");
+    const universities: IUniversitySchema[] = await University.aggregate([
+      {
+        $match: {
+          // Match documents where EITHER the universityName OR any programName contains the query.
+          $or: [
+            { universityName: { $regex: searchQuery } },
+            { "programsOffered.programName": { $regex: searchQuery } },
+          ],
+        },
+      },
+      {
+        $project: {
+          _id: 0, // Exclude the document ID
+          universityName: 1,
+          location: 1,
+          qsWorldRanking: 1,
+          overallScore: 1,
+          // Filter the programsOffered array to only include programs that match the query
+          programsOffered: {
+            $filter: {
+              input: "$programsOffered",
+              as: "program",
+              cond: {
+                $regexMatch: {
+                  input: "$$program.programName",
+                  regex: searchQuery,
+                },
+              },
+            },
+          },
+          // Include the original programsOffered array if the university name matched.
+          // This complex logic is to ensure the output is concise.
+          originalPrograms: "$programsOffered",
+        },
+      },
+      // Post-process to structure the result
+      {
+        $project: {
+          universityName: 1,
+          location: 1,
+          qsWorldRanking: 1,
+          overallScore: 1,
+          // If the filtered list of programs is empty, use the full list
+          // (which means the university name was the one that matched the query).
+          // Otherwise, use the filtered list of programs.
+          programsOffered: {
+            $cond: {
+              if: { $eq: [{ $size: "$programsOffered" }, 0] },
+              then: "$originalPrograms", // University name matched, return all programs
+              else: "$programsOffered", // Program name matched, return only matching programs
+            },
+          },
+        },
+      },
+    ]);
 
-    // Flatten all programs from all universities
-    const allPrograms = universities.flatMap(uni =>
-      uni.programsOffered.map(program => ({
+    console.log("Universities", universities);
+
+    // // Flatten all programs from all universities
+    const allPrograms = universities.map((uni) =>
+      uni.programsOffered.map((program) => ({
         programName: program.programName,
         degreeType: program.degreeType,
         programDuration: program.programDuration,
@@ -32,8 +91,12 @@ export const getRecommendations = async (req: Request, res: Response) => {
       }))
     );
 
+    console.log("All Programs", allPrograms);
+
+    const flatPrograms = allPrograms.flat();
+
     // Sort based on preference
-    let sortedPrograms = [...allPrograms];
+    let sortedPrograms = [...flatPrograms];
 
     switch (sortBy) {
       case "budget":

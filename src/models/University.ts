@@ -42,7 +42,7 @@ export interface IUniversitySchema extends Document {
   programsOffered: Programs[];
 }
 
-const universitySchema = new Schema<IUniversitySchema>({
+export const universitySchema = new Schema<IUniversitySchema>({
   universityName: { type: String, required: true },
   qsWorldRanking: { type: Number, required: true },
   location: { type: String, required: true },
