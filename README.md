@@ -4,6 +4,8 @@ This is the backend API for Majornomics. It provides endpoints for program data,
 
 The backend is built with Node.js, Express, and TypeScript, with MongoDB as the data store.
 
+- The frontend repo can be found here: https://github.com/NeftalemMG/Majornomics.git
+
 ---
 
 ## Key Features
