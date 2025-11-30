@@ -48,7 +48,7 @@ Start production server:
 
 Create a `.env` file:
 
-MONGODB_URI=<your-mongodb-connection>
+MONGODB_URI= <"your-mongodb-connection">
 PORT=5000
 
 
